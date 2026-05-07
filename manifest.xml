@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
+     SPDX-License-Identifier: BSD-3-Clause-Clear
+
+     Vendor manifest for auto_gen_prime (Cuttlefish build).
+     The android.hardware.automotive.audiocontrol HAL is intentionally
+     omitted here; it is declared by the Cuttlefish service fragment at
+     /vendor/etc/vintf/manifest/audiocontrol-default.xml.
+-->
+<manifest version="1.0" type="device" target-level="202504">
+</manifest>

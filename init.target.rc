@@ -1,0 +1,8 @@
+# Copyright (c) 2026, Qualcomm Technologies, Inc. All rights reserved.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+#
+# auto_gen_prime specific init overrides
+
+on early-init
+    # Enable verbose kernel logging (loglevel 7 = KERN_DEBUG)
+    loglevel 7

@@ -1,0 +1,23 @@
+# fstab for auto_gen_prime (GVM + Cuttlefish hybrid)
+# Encryption disabled for /data. Dynamic partitions use ext4 only.
+
+# Dynamic partitions (logical, in super)
+system /system ext4 noatime,ro,errors=panic wait,logical,first_stage_mount,slotselect,avb=vbmeta_system,avb_keys=/avb
+vendor /vendor ext4 noatime,ro,errors=panic wait,logical,first_stage_mount,slotselect,avb=vbmeta
+product /product ext4 noatime,ro,errors=panic wait,logical,first_stage_mount,slotselect,avb,nofail
+system_ext /system_ext ext4 noatime,ro,errors=panic wait,logical,first_stage_mount,slotselect,avb=vbmeta_system,nofail
+vendor_dlkm /vendor_dlkm ext4 noatime,ro,errors=panic wait,logical,first_stage_mount,slotselect,avb=vbmeta_vendor_dlkm
+system_dlkm /system_dlkm ext4 noatime,ro,errors=panic wait,logical,first_stage_mount,slotselect,avb=vbmeta_system_dlkm,avb_keys=/avb
+
+# Physical partitions
+# misc: required by android.hardware.boot-service to store A/B slot info
+/dev/block/by-name/misc /misc emmc defaults defaults
+# userdata: f2fs, encryption disabled
+/dev/block/by-name/userdata /data f2fs nodev,noatime,nosuid,reserve_root=32768 latemount,wait,check,quota,formattable,fscompress,checkpoint=fs
+/dev/block/by-name/metadata /metadata f2fs nodev,noatime,nosuid wait,check,formattable,first_stage_mount
+
+# ZRAM swap
+/dev/block/zram0 none swap defaults zramsize=75%
+
+# Cuttlefish virtiofs host-shared folder
+shared /mnt/vendor/shared virtiofs nosuid,nodev,noatime nofail
