@@ -11,6 +11,10 @@ TARGET_BOOTLOADER_BOARD_NAME := auto_gen
 TARGET_BOARD_TYPE            := auto
 TARGET_BOARD_SUFFIX          := _prime
 
+# Override KERNEL_MODULES_OUT: gen4_gvm.mk evaluates it using $(TARGET_BOARD_PLATFORM)
+# which was gen4_gvm at that point; re-evaluate now with auto_gen_prime's platform settings
+KERNEL_MODULES_OUT := out/target/product/$(TARGET_BOARD_PLATFORM)$(TARGET_BOARD_SUFFIX)$(TARGET_BOARD_DERIVATIVE_SUFFIX)/$(KERNEL_MODULES_INSTALL)/lib/modules
+
 PRODUCT_NAME   := auto_gen_prime
 PRODUCT_DEVICE := auto_gen_prime
 PRODUCT_BRAND  := qti

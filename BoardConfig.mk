@@ -11,6 +11,21 @@ BOARD_VENDOR_SEPOLICY_DIRS += device/google/cuttlefish/shared/sepolicy/vendor/go
 # Remove QTI vendor common sepolicy to avoid duplicate type declarations with Cuttlefish sepolicy
 BOARD_SEPOLICY_DIRS := $(filter-out device/qcom/sepolicy_vndr%,$(BOARD_SEPOLICY_DIRS))
 
+# Filter out kernel modules that don't exist yet — kernel must be built first.
+# Once the kernel is built, $(wildcard ...) will pick them up automatically.
+BOARD_VENDOR_KERNEL_MODULES := $(wildcard $(BOARD_VENDOR_KERNEL_MODULES))
+BOARD_VENDOR_RAMDISK_KERNEL_MODULES := $(wildcard $(BOARD_VENDOR_RAMDISK_KERNEL_MODULES))
+BOARD_VENDOR_KERNEL_MODULES_LOAD := $(wildcard $(BOARD_VENDOR_KERNEL_MODULES_LOAD))
+BOARD_VENDOR_RAMDISK_KERNEL_MODULES_LOAD := $(wildcard $(BOARD_VENDOR_RAMDISK_KERNEL_MODULES_LOAD))
+
+# Add compat mapping for Cuttlefish auto sepolicy types not in QTI compat mapping
+# (auto_eth_namespace_setup_complete_prop, hal_occupant_awareness_service)
+# Files named V.v.compat.cil are picked up by se_build_files{.system_ext_private} tag
+SYSTEM_EXT_PRIVATE_SEPOLICY_DIRS += device/qcom/auto_gen_prime/sepolicy
+# Set BOARD_SYSTEM_EXT_SEPOLICY_PREBUILT_DIRS so HAS_BOARD_SYSTEM_EXT_SEPOLICY_PREBUILT_DIRS=true,
+# which causes system_ext_V.v.cil to be included in V.v_mapping.combined.cil for treble tests
+BOARD_SYSTEM_EXT_SEPOLICY_PREBUILT_DIRS += device/qcom/auto_gen_prime/sepolicy
+
 # Disable QTI VHAL soong config flags — Cuttlefish provides its own VHAL via APEX
 $(call soong_config_set,qti,qti_android_version_above_16,false)
 $(call soong_config_set,qti,IS_ANDROID_SHIPPING_W,false)
