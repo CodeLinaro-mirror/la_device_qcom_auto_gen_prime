@@ -72,9 +72,8 @@ BOARD_BOOTCONFIG += androidboot.vendor.apex.com.android.hardware.keymint=com.and
 BOARD_BOOTCONFIG += androidboot.vendor.apex.com.android.hardware.graphics.composer=com.android.hardware.graphics.composer.ranchu
 BOARD_BOOTCONFIG += androidboot.vendor.apex.com.android.hardware.gatekeeper=com.android.hardware.gatekeeper.nonsecure
 
-# androidboot.hardware=qcom is set in gen4_gvm BOARD_BOOTCONFIG which is never loaded on GVM;
-# add to BOARD_KERNEL_CMDLINE so ro.boot.hardware=qcom is set at runtime.
-BOARD_KERNEL_CMDLINE += androidboot.hardware=qcom
+# androidboot.hardware=qcom is inherited from gen4_gvm BOARD_BOOTCONFIG.
+# Keep it out of BOARD_KERNEL_CMDLINE so first-stage init has a single source.
 
 # Cuttlefish graphics: minigbm gralloc + ranchu HWComposer
 BOARD_KERNEL_CMDLINE += androidboot.hardware.gralloc=minigbm

@@ -49,7 +49,9 @@ TRUSTY_SYSTEM_VM :=
 $(call inherit-product, device/google/cuttlefish/vsoc_x86_64_only/auto/aosp_cf.mk)
 
 # Cuttlefish fstab configuration
-PRODUCT_COPY_FILES += device/qcom/auto_gen_prime/fstab.cf.f2fs.hctr2:$(TARGET_COPY_OUT_VENDOR)/etc/fstab.qcom
+PRODUCT_COPY_FILES += \
+    device/qcom/auto_gen_prime/fstab.cf.f2fs.hctr2:$(TARGET_COPY_OUT_VENDOR_RAMDISK)/first_stage_ramdisk/fstab.qcom \
+    device/qcom/auto_gen_prime/fstab.cf.f2fs.hctr2:$(TARGET_COPY_OUT_VENDOR)/etc/fstab.qcom
 
 PRODUCT_COPY_FILES += \
     device/qcom/auto_gen_prime/init.target.rc:$(TARGET_COPY_OUT_VENDOR)/etc/init/hw/init.target.rc
