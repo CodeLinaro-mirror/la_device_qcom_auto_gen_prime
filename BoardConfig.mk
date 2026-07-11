@@ -11,6 +11,28 @@ BOARD_VENDOR_SEPOLICY_DIRS += device/google/cuttlefish/shared/sepolicy/vendor/go
 # Remove QTI vendor common sepolicy to avoid duplicate type declarations with Cuttlefish sepolicy
 BOARD_SEPOLICY_DIRS := $(filter-out device/qcom/sepolicy_vndr%,$(BOARD_SEPOLICY_DIRS))
 
+# Explicitly specify all required kernel modules. The common approach is that first and second stage
+# modules are picked automatically based on their location within the kernel prebuilt directory.
+# However, LA Prime and Gen GVM use different subsets of modules provided by autogvm, therefore:
+#  * Gen GVM picks all modules, and uses the default blocklist to not laod unneeded modules.
+#  * LA Prime picks only required modules, and the kernel build generates an empty blocklist.
+
+BOARD_VENDOR_RAMDISK_KERNEL_MODULES_LOAD :=
+BOARD_VENDOR_RAMDISK_KERNEL_MODULES := \
+    device/qcom/auto_gen-kernel/virtio_mmio.ko \
+    device/qcom/auto_gen-kernel/virtio_console.ko \
+    device/qcom/auto_gen-kernel/system_dlkm/flatten/lib/modules/virtio_pci.ko \
+    device/qcom/auto_gen-kernel/system_dlkm/flatten/lib/modules/virtio_pci_legacy_dev.ko \
+    device/qcom/auto_gen-kernel/system_dlkm/flatten/lib/modules/virtio_pci_modern_dev.ko \
+    device/qcom/auto_gen-kernel/system_dlkm/flatten/lib/modules/virtio_blk.ko \
+    device/qcom/auto_gen-kernel/rename_devices.ko \
+
+BOARD_VENDOR_KERNEL_MODULES_LOAD :=
+BOARD_VENDOR_KERNEL_MODULES := \
+    device/qcom/auto_gen-kernel/vendor_dlkm/virtio_dma_buf.ko \
+    device/qcom/auto_gen-kernel/vendor_dlkm/virtio-gpu.ko \
+    device/qcom/auto_gen-kernel/vendor_dlkm/virtio_snd.ko \
+
 # Filter out kernel modules that don't exist yet — kernel must be built first.
 # Once the kernel is built, $(wildcard ...) will pick them up automatically.
 BOARD_VENDOR_KERNEL_MODULES := $(wildcard $(BOARD_VENDOR_KERNEL_MODULES))
