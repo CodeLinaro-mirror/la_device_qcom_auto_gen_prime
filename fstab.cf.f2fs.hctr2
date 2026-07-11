@@ -4,12 +4,12 @@
 # Encryption disabled for /data. Dynamic partitions use ext4 only.
 
 # Dynamic partitions (logical, in super)
-system /system ext4 noatime,ro,errors=panic wait,logical,first_stage_mount,slotselect,avb=vbmeta_system,avb_keys=/avb
-vendor /vendor ext4 noatime,ro,errors=panic wait,logical,first_stage_mount,slotselect,avb=vbmeta
+system /system ext4 noatime,ro,errors=panic wait,logical,first_stage_mount,slotselect,avb
+vendor /vendor ext4 noatime,ro,errors=panic wait,logical,first_stage_mount,slotselect,avb
 product /product ext4 noatime,ro,errors=panic wait,logical,first_stage_mount,slotselect,avb,nofail
-system_ext /system_ext ext4 noatime,ro,errors=panic wait,logical,first_stage_mount,slotselect,avb=vbmeta_system,nofail
-vendor_dlkm /vendor_dlkm ext4 noatime,ro,errors=panic wait,logical,first_stage_mount,slotselect,avb=vbmeta_vendor_dlkm
-system_dlkm /system_dlkm ext4 noatime,ro,errors=panic wait,logical,first_stage_mount,slotselect,avb=vbmeta_system_dlkm,avb_keys=/avb
+system_ext /system_ext ext4 noatime,ro,errors=panic wait,logical,first_stage_mount,slotselect,avb,nofail
+vendor_dlkm /vendor_dlkm ext4 noatime,ro,errors=panic wait,logical,first_stage_mount,slotselect,avb
+system_dlkm /system_dlkm ext4 noatime,ro,errors=panic wait,logical,first_stage_mount,slotselect,avb
 
 # Physical partitions
 # misc: required by android.hardware.boot-service to store A/B slot info
