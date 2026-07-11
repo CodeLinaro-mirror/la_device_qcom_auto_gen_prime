@@ -56,6 +56,10 @@ $(call soong_config_set,qti,enable_qti_vhal,false)
 PRODUCT_PRIVATE_SEPOLICY_DIRS += device/google/cuttlefish/shared/sepolicy/product/private
 SYSTEM_EXT_PUBLIC_SEPOLICY_DIRS += device/google/cuttlefish/shared/sepolicy/system_ext/public
 
+# Set the state to "orange" to be able to boot on HGY.
+# Must be added to BOARD_KERNEL_CMDLINE to have any effect.
+BOARD_KERNEL_CMDLINE += androidboot.verifiedbootstate=orange
+
 # Override console: gen4_gvm sets hvc0 (virtio); auto_gen_prime uses PL011 UART (ttyAMA0)
 BOARD_KERNEL_CMDLINE := $(filter-out console=hvc0%,$(BOARD_KERNEL_CMDLINE))
 BOARD_BOOTCONFIG := $(filter-out androidboot.console=hvc0,$(BOARD_BOOTCONFIG))
