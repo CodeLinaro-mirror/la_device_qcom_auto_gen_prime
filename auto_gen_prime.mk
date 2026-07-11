@@ -29,6 +29,9 @@ DEVICE_MANIFEST_FILE := device/qcom/auto_gen_prime/manifest.xml
 # Prevents VINTF conflict: IVehicle/default @4 (QTI) vs @3 (Cuttlefish)
 ENABLE_AIDL_VHAL := false
 
+# This is not supported yet, disable to avoid endless loop animation.
+LOCAL_ENABLE_OEMLOCK := false
+
 BOARD_DYNAMIC_PARTITION_ENABLE := true
 
 PRODUCT_PACKAGES :=
