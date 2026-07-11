@@ -32,6 +32,11 @@ ENABLE_AIDL_VHAL := false
 # This is not supported yet, disable to avoid endless loop animation.
 LOCAL_ENABLE_OEMLOCK := false
 
+# Gen GVM BoardConfig.mk sets this variable but it is used before assignment. If set,
+# it also sets BOARD_MOVE_RECOVERY_RESOURCES_TO_VENDOR_BOOT, which is required for
+# LA Prime to boot at all (Cuttlefish also sets it).
+TARGET_NO_RECOVERY := true
+
 BOARD_DYNAMIC_PARTITION_ENABLE := true
 
 PRODUCT_PACKAGES :=
