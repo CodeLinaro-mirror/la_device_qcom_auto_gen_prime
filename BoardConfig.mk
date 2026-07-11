@@ -60,11 +60,10 @@ SYSTEM_EXT_PUBLIC_SEPOLICY_DIRS += device/google/cuttlefish/shared/sepolicy/syst
 # Must be added to BOARD_KERNEL_CMDLINE to have any effect.
 BOARD_KERNEL_CMDLINE += androidboot.verifiedbootstate=orange
 
-# Override console: gen4_gvm sets hvc0 (virtio); auto_gen_prime uses PL011 UART (ttyAMA0)
+# Remove console from BOARD_KERNEL_CMDLINE because GVM does not boot on HGY.
+# Delete this workaround once proper fix is ready.
+# The console is still hvc0: set via andoidboot.console in the included Gen BoardConfig.
 BOARD_KERNEL_CMDLINE := $(filter-out console=hvc0%,$(BOARD_KERNEL_CMDLINE))
-BOARD_BOOTCONFIG := $(filter-out androidboot.console=hvc0,$(BOARD_BOOTCONFIG))
-BOARD_KERNEL_CMDLINE += earlycon=pl011,0x1c090000 console=ttyAMA0
-BOARD_BOOTCONFIG += androidboot.console=ttyAMA0
 
 BOARD_KERNEL_CMDLINE += audit=1
 
