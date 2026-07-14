@@ -22,6 +22,9 @@ PRODUCT_MODEL  := auto_gen_prime for arm64
 
 ifeq ($(ENABLE_VENDOR_CUTTLEFISH), true)
 
+# Disable GAS. It adds PRODUCT_PACKAGE_OVERLAYS which results in endless boot animation.
+TARGET_USES_GAS := false
+
 # Use empty manifest to avoid VINTF conflict with Cuttlefish audiocontrol fragment
 DEVICE_MANIFEST_FILE := device/qcom/auto_gen_prime/manifest.xml
 
