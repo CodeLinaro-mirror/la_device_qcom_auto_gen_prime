@@ -42,7 +42,10 @@ TARGET_NO_RECOVERY := true
 
 BOARD_DYNAMIC_PARTITION_ENABLE := true
 
+# Clear gen4_gvm product configuration. Cuttlefish aosp_cf.mk below provides the
+# PRODUCT variables for the virtual device.
 PRODUCT_PACKAGES :=
+PRODUCT_PACKAGES_DEBUG :=
 PRODUCT_VENDOR_PROPERTIES :=
 PRODUCT_MANUFACTURER :=
 # Remove ro.soc.manufacturer set by gen4_gvm.mk to avoid duplicate with Cuttlefish config
