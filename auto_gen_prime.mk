@@ -66,6 +66,10 @@ SOONG_CONFIG_wpa_supplicant_8_exclude_qca_defaults := true
 # Prevent Trusty VM from being enabled by Cuttlefish device.mk (TRUSTY_SYSTEM_VM ?= ...)
 TRUSTY_SYSTEM_VM :=
 
+# Use the in-guest fake VHAL. The Cuttlefish VHAL requires a host-side
+# vhal_proxy_server, which PVM does not always have.
+LOCAL_VHAL_PRODUCT_PACKAGE := android.hardware.automotive.vehicle@V4-default-service
+
 $(call inherit-product, device/google/cuttlefish/vsoc_arm64_only/auto/aosp_cf.mk)
 
 # Cuttlefish fstab configuration
