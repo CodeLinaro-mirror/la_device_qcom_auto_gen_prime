@@ -40,6 +40,8 @@ LOCAL_ENABLE_OEMLOCK := false
 # LA Prime to boot at all (Cuttlefish also sets it).
 TARGET_NO_RECOVERY := true
 
+TARGET_USES_QMAA_OVERRIDE_AUDIO := false
+
 BOARD_DYNAMIC_PARTITION_ENABLE := true
 
 # Clear gen4_gvm product configuration. Cuttlefish aosp_cf.mk below provides the
@@ -50,6 +52,10 @@ PRODUCT_VENDOR_PROPERTIES :=
 PRODUCT_MANUFACTURER :=
 # Remove ro.soc.manufacturer set by gen4_gvm.mk to avoid duplicate with Cuttlefish config
 PRODUCT_PROPERTY_OVERRIDES := $(filter-out ro.soc.manufacturer=%,$(PRODUCT_PROPERTY_OVERRIDES))
+# Remove inheritance to avoid ro.hardware.egl duplicate with BoardConfig.
+PRODUCT_PROPERTY_OVERRIDES := $(filter-out @%vendor/adreno-product.mk,$(PRODUCT_PROPERTY_OVERRIDES))
+# Remove inheritance to avoid copying android.hardware.audio.pro.xml (prevents booting to UI).
+PRODUCT_COPY_FILES := $(filter-out @%vendor/audio_ar_vendor_product.mk,$(PRODUCT_COPY_FILES))
 
 SOONG_CONFIG_NAMESPACES += wpa_supplicant_8
 SOONG_CONFIG_wpa_supplicant_8 += enable_vendor_aidl
