@@ -60,7 +60,7 @@ SOONG_CONFIG_wpa_supplicant_8_exclude_qca_defaults := true
 # Prevent Trusty VM from being enabled by Cuttlefish device.mk (TRUSTY_SYSTEM_VM ?= ...)
 TRUSTY_SYSTEM_VM :=
 
-$(call inherit-product, device/google/cuttlefish/vsoc_x86_64_only/auto/aosp_cf.mk)
+$(call inherit-product, device/google/cuttlefish/vsoc_arm64_only/auto/aosp_cf.mk)
 
 # Cuttlefish fstab configuration
 PRODUCT_COPY_FILES += \
