@@ -6,3 +6,8 @@
 on early-init
     # Enable verbose kernel logging (loglevel 7 = KERN_DEBUG)
     loglevel 7
+
+    # Explicitly load modules directly under /system/lib/modules. Reasons:
+    #  * Cuttlefish's dlkm_loader tries to load rust_binder.ko, ignores other system_dlkm modules.
+    #  * Qualcomm's load_dlkm loads from system_dlkm subdirectories, ignores directly placed ones.
+    exec u:r:modprobe:s0 -- /system/bin/modprobe --dirname=/system/lib/modules --all=/system/lib/modules/modules.load

@@ -77,8 +77,8 @@ PRODUCT_COPY_FILES += \
     device/qcom/auto_gen_prime/fstab.cf.f2fs.hctr2:$(TARGET_COPY_OUT_VENDOR_RAMDISK)/first_stage_ramdisk/fstab.qcom \
     device/qcom/auto_gen_prime/fstab.cf.f2fs.hctr2:$(TARGET_COPY_OUT_VENDOR)/etc/fstab.qcom
 
-PRODUCT_COPY_FILES += \
-    device/qcom/auto_gen_prime/init.target.rc:$(TARGET_COPY_OUT_VENDOR)/etc/init/hw/init.target.rc
+# Copy as init.qcom.rc. The init process auto-loads only init.{androidboot.hardware}.rc from /vendor/etc/init/hw.
+PRODUCT_COPY_FILES += device/qcom/auto_gen_prime/init.target.rc:$(TARGET_COPY_OUT_VENDOR)/etc/init/hw/init.qcom.rc
 
 PRODUCT_PRODUCT_PROPERTIES += persist.adb.tcp.port=5555
 PRODUCT_VENDOR_PROPERTIES += persist.vendor.usb.config=adb
@@ -96,5 +96,11 @@ PRODUCT_PACKAGES += com.qcom.prime.gralloc
 # Do not include Cuttlefish ranchu Vulkan apex on this target. We ship
 # virtio-based Mesa Vulkan instead.
 TARGET_VULKAN_SUPPORT := false
+
+# Add QC VirtIO kernel drivers from the corresponding component.
+$(call inherit-product-if-exists, vendor/qcom/defs/product-defs/vendor/virtio_can_product.mk)
+$(call inherit-product-if-exists, vendor/qcom/defs/product-defs/vendor/virtio_spi_product.mk)
+$(call inherit-product-if-exists, vendor/qcom/defs/product-defs/vendor/virtio_rtc_product.mk)
+$(call inherit-product-if-exists, vendor/qcom/defs/product-defs/vendor/virtio_usb_product.mk)
 
 endif #end of ENABLE_VENDOR_CUTTLEFISH

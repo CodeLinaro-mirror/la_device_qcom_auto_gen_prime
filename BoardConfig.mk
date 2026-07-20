@@ -22,13 +22,15 @@ SYSTEM_EXT_PRIVATE_SEPOLICY_DIRS += device/google/cuttlefish/shared/sepolicy/sys
 # Add auto_gen_prime SEPolicy.
 BOARD_VENDOR_SEPOLICY_DIRS += device/qcom/sepolicy_vndr/generic/vendor/auto_gen_prime
 
-# Explicitly specify all required kernel modules. The common approach is that first and second stage
-# modules are picked automatically based on their location within the kernel prebuilt directory.
-# However, LA Prime and Gen GVM use different subsets of modules provided by autogvm, therefore:
-#  * Gen GVM picks all modules, and uses the default blocklist to not laod unneeded modules.
-#  * LA Prime picks only required modules, and the kernel build generates an empty blocklist.
+# Explicitly specify all required kernel modules. Vendor ramdisk modules and
+# DLKM modules are normally picked automatically based on their kernel prebuilt
+# location. However, LA Prime and Gen GVM use different subsets of modules
+# provided by autogvm, therefore:
+#  * Gen GVM picks all modules and uses the default blocklist to avoid loading
+#    unneeded modules.
+#  * LA Prime picks only required modules and uses the generated load lists for
+#    the selected ramdisk, vendor_dlkm and system_dlkm modules.
 
-BOARD_VENDOR_RAMDISK_KERNEL_MODULES_LOAD :=
 BOARD_VENDOR_RAMDISK_KERNEL_MODULES := \
     device/qcom/auto_gen-kernel/virtio_mmio.ko \
     device/qcom/auto_gen-kernel/virtio_console.ko \
@@ -40,19 +42,41 @@ BOARD_VENDOR_RAMDISK_KERNEL_MODULES := \
     device/qcom/auto_gen-kernel/net_failover.ko \
     device/qcom/auto_gen-kernel/virtio_net.ko \
     device/qcom/auto_gen-kernel/rename_devices.ko \
+    device/qcom/auto_gen-kernel/i2c-virtio.ko
 
-BOARD_VENDOR_KERNEL_MODULES_LOAD :=
 BOARD_VENDOR_KERNEL_MODULES := \
     device/qcom/auto_gen-kernel/vendor_dlkm/virtio_dma_buf.ko \
     device/qcom/auto_gen-kernel/vendor_dlkm/virtio-gpu.ko \
     device/qcom/auto_gen-kernel/vendor_dlkm/virtio_snd.ko \
+    device/qcom/auto_gen-kernel/vendor_dlkm/virtio_input.ko \
+    device/qcom/auto_gen-kernel/vendor_dlkm/virtio-rng.ko \
+    device/qcom/auto_gen-kernel/vendor_dlkm/gpio-virtio.ko
+
+BOARD_SYSTEM_KERNEL_MODULES := \
+    device/qcom/auto_gen-kernel/system_dlkm/flatten/lib/modules/vmw_vsock_virtio_transport.ko \
+    device/qcom/auto_gen-kernel/system_dlkm/flatten/lib/modules/can-dev.ko \
+    device/qcom/auto_gen-kernel/system_dlkm/flatten/lib/modules/ptp.ko \
+    device/qcom/auto_gen-kernel/system_dlkm/flatten/lib/modules/pps_core.ko
 
 # Filter out kernel modules that don't exist yet — kernel must be built first.
 # Once the kernel is built, $(wildcard ...) will pick them up automatically.
-BOARD_VENDOR_KERNEL_MODULES := $(wildcard $(BOARD_VENDOR_KERNEL_MODULES))
+
+# BOARD_VENDOR_RAMDISK_KERNEL_MODULES_LOAD is set by kernel-platform-board.mk and must be adjusted.
 BOARD_VENDOR_RAMDISK_KERNEL_MODULES := $(wildcard $(BOARD_VENDOR_RAMDISK_KERNEL_MODULES))
-BOARD_VENDOR_KERNEL_MODULES_LOAD := $(wildcard $(BOARD_VENDOR_KERNEL_MODULES_LOAD))
-BOARD_VENDOR_RAMDISK_KERNEL_MODULES_LOAD := $(wildcard $(BOARD_VENDOR_RAMDISK_KERNEL_MODULES_LOAD))
+BOARD_VENDOR_RAMDISK_KERNEL_MODULES_LOAD := $(BOARD_VENDOR_RAMDISK_KERNEL_MODULES)
+# The variable must be set in order to generate non-empty modules.load.
+BOARD_SYSTEM_KERNEL_MODULES := $(wildcard $(BOARD_SYSTEM_KERNEL_MODULES))
+BOARD_SYSTEM_KERNEL_MODULES_LOAD := $(BOARD_SYSTEM_KERNEL_MODULES)
+# The variable must remain unset in order to properly generate modules.load.
+BOARD_VENDOR_KERNEL_MODULES := $(wildcard $(BOARD_VENDOR_KERNEL_MODULES))
+
+# Modules that are built as PRODUCT_PACKAGES must be added after the filtering.
+
+# QC VirtIO modules.
+-include vendor/qcom/defs/board-defs/vendor/virtio_can_board.mk
+-include vendor/qcom/defs/board-defs/vendor/virtio_spi_board.mk
+-include vendor/qcom/defs/board-defs/vendor/virtio_rtc_board.mk
+-include vendor/qcom/defs/board-defs/vendor/virtio_usb_board.mk
 
 # Disable QTI VHAL soong config flags — Cuttlefish provides its own VHAL via APEX
 $(call soong_config_set,qti,qti_android_version_above_16,false)
