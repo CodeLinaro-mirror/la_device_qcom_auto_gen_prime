@@ -81,6 +81,7 @@ PRODUCT_COPY_FILES += \
 PRODUCT_COPY_FILES += device/qcom/auto_gen_prime/init.target.rc:$(TARGET_COPY_OUT_VENDOR)/etc/init/hw/init.qcom.rc
 
 PRODUCT_PRODUCT_PROPERTIES += persist.adb.tcp.port=5555
+PRODUCT_PRODUCT_PROPERTIES += service.adb.listen_addrs=vsock:5555
 PRODUCT_VENDOR_PROPERTIES += persist.vendor.usb.config=adb
 
 # EGL implementation from VirtIO Mesa (external/virtio/mesa3d).
