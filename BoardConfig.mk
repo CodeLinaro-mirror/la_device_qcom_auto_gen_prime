@@ -25,6 +25,9 @@ BOARD_VENDOR_RAMDISK_KERNEL_MODULES := \
     device/qcom/auto_gen-kernel/system_dlkm/flatten/lib/modules/virtio_pci_legacy_dev.ko \
     device/qcom/auto_gen-kernel/system_dlkm/flatten/lib/modules/virtio_pci_modern_dev.ko \
     device/qcom/auto_gen-kernel/system_dlkm/flatten/lib/modules/virtio_blk.ko \
+    device/qcom/auto_gen-kernel/failover.ko \
+    device/qcom/auto_gen-kernel/net_failover.ko \
+    device/qcom/auto_gen-kernel/virtio_net.ko \
     device/qcom/auto_gen-kernel/rename_devices.ko \
 
 BOARD_VENDOR_KERNEL_MODULES_LOAD :=
