@@ -1,7 +1,0 @@
-(typeattributeset auto_eth_namespace_setup_complete_prop_202504 (auto_eth_namespace_setup_complete_prop))
-(expandtypeattribute (auto_eth_namespace_setup_complete_prop_202504) true)
-(typeattribute auto_eth_namespace_setup_complete_prop_202504)
-
-(typeattributeset hal_occupant_awareness_service_202504 (hal_occupant_awareness_service))
-(expandtypeattribute (hal_occupant_awareness_service_202504) true)
-(typeattribute hal_occupant_awareness_service_202504)

@@ -2,14 +2,25 @@ include device/qcom/gen4_gvm/BoardConfig.mk
 
 ifeq ($(ENABLE_VENDOR_CUTTLEFISH), true)
 
-# vendor sepolicy
-BOARD_VENDOR_SEPOLICY_DIRS :=
+# Remove SEPolicy added by Gen GVM. It clashes with the Cuttlefish SEPolicy below.
+BOARD_SEPOLICY_DIRS := $(filter-out device/qcom/sepolicy%,$(BOARD_SEPOLICY_DIRS))
+SYSTEM_EXT_PUBLIC_SEPOLICY_DIRS := $(filter-out device/qcom/sepolicy%,$(SYSTEM_EXT_PUBLIC_SEPOLICY_DIRS))
+SYSTEM_EXT_PRIVATE_SEPOLICY_DIRS := $(filter-out device/qcom/sepolicy%,$(SYSTEM_EXT_PRIVATE_SEPOLICY_DIRS))
+PRODUCT_PUBLIC_SEPOLICY_DIRS := $(filter-out device/qcom/sepolicy%,$(PRODUCT_PUBLIC_SEPOLICY_DIRS))
+PRODUCT_PRIVATE_SEPOLICY_DIRS := $(filter-out device/qcom/sepolicy%,$(PRODUCT_PRIVATE_SEPOLICY_DIRS))
+BOARD_SYSTEM_EXT_SEPOLICY_PREBUILT_DIRS := $(filter-out device/qcom/sepolicy%,$(BOARD_SYSTEM_EXT_SEPOLICY_PREBUILT_DIRS))
+BOARD_PRODUCT_SEPOLICY_PREBUILT_DIRS := $(filter-out device/qcom/sepolicy%,$(BOARD_PRODUCT_SEPOLICY_PREBUILT_DIRS))
+
+# Add Cuttlefish SEPolicy.
+BOARD_VENDOR_SEPOLICY_DIRS += device/google/cuttlefish/shared/graphics/sepolicy
 BOARD_VENDOR_SEPOLICY_DIRS += device/google/cuttlefish/shared/sepolicy/vendor
 BOARD_VENDOR_SEPOLICY_DIRS += device/google/cuttlefish/shared/sepolicy/vendor/seriallogging
 BOARD_VENDOR_SEPOLICY_DIRS += device/google/cuttlefish/shared/sepolicy/vendor/google
+PRODUCT_PRIVATE_SEPOLICY_DIRS += device/google/cuttlefish/shared/sepolicy/product/private
+SYSTEM_EXT_PRIVATE_SEPOLICY_DIRS += device/google/cuttlefish/shared/sepolicy/system_ext/private
 
-# Remove QTI vendor common sepolicy to avoid duplicate type declarations with Cuttlefish sepolicy
-BOARD_SEPOLICY_DIRS := $(filter-out device/qcom/sepolicy_vndr%,$(BOARD_SEPOLICY_DIRS))
+# Add auto_gen_prime SEPolicy.
+BOARD_VENDOR_SEPOLICY_DIRS += device/qcom/sepolicy_vndr/generic/vendor/auto_gen_prime
 
 # Explicitly specify all required kernel modules. The common approach is that first and second stage
 # modules are picked automatically based on their location within the kernel prebuilt directory.
@@ -43,21 +54,10 @@ BOARD_VENDOR_RAMDISK_KERNEL_MODULES := $(wildcard $(BOARD_VENDOR_RAMDISK_KERNEL_
 BOARD_VENDOR_KERNEL_MODULES_LOAD := $(wildcard $(BOARD_VENDOR_KERNEL_MODULES_LOAD))
 BOARD_VENDOR_RAMDISK_KERNEL_MODULES_LOAD := $(wildcard $(BOARD_VENDOR_RAMDISK_KERNEL_MODULES_LOAD))
 
-# Add compat mapping for Cuttlefish auto sepolicy types not in QTI compat mapping
-# (auto_eth_namespace_setup_complete_prop, hal_occupant_awareness_service)
-# Files named V.v.compat.cil are picked up by se_build_files{.system_ext_private} tag
-SYSTEM_EXT_PRIVATE_SEPOLICY_DIRS += device/qcom/auto_gen_prime/sepolicy
-# Set BOARD_SYSTEM_EXT_SEPOLICY_PREBUILT_DIRS so HAS_BOARD_SYSTEM_EXT_SEPOLICY_PREBUILT_DIRS=true,
-# which causes system_ext_V.v.cil to be included in V.v_mapping.combined.cil for treble tests
-BOARD_SYSTEM_EXT_SEPOLICY_PREBUILT_DIRS += device/qcom/auto_gen_prime/sepolicy
-
 # Disable QTI VHAL soong config flags — Cuttlefish provides its own VHAL via APEX
 $(call soong_config_set,qti,qti_android_version_above_16,false)
 $(call soong_config_set,qti,IS_ANDROID_SHIPPING_W,false)
 $(call soong_config_set,qti,enable_qti_vhal,false)
-
-PRODUCT_PRIVATE_SEPOLICY_DIRS += device/google/cuttlefish/shared/sepolicy/product/private
-SYSTEM_EXT_PUBLIC_SEPOLICY_DIRS += device/google/cuttlefish/shared/sepolicy/system_ext/public
 
 # Set the state to "orange" to be able to boot on HGY.
 # Must be added to BOARD_KERNEL_CMDLINE to have any effect.
