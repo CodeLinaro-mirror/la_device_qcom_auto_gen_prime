@@ -59,6 +59,9 @@ $(call soong_config_set,qti,qti_android_version_above_16,false)
 $(call soong_config_set,qti,IS_ANDROID_SHIPPING_W,false)
 $(call soong_config_set,qti,enable_qti_vhal,false)
 
+# Build QC VirtIO graphics modules only for LA Prime.
+$(call soong_config_set,qcvirtio_graphics,enabled,true)
+
 # Set the state to "orange" to be able to boot on HGY.
 # Must be added to BOARD_KERNEL_CMDLINE to have any effect.
 BOARD_KERNEL_CMDLINE += androidboot.verifiedbootstate=orange
@@ -72,17 +75,18 @@ BOARD_KERNEL_CMDLINE += audit=1
 
 # Select APEXes to avoid name conflicts with Cuttlefish-provided APEXes of the same module name
 BOARD_BOOTCONFIG += androidboot.vendor.apex.com.android.hardware.keymint=com.android.hardware.keymint.rust_nonsecure
-BOARD_BOOTCONFIG += androidboot.vendor.apex.com.android.hardware.graphics.composer=com.android.hardware.graphics.composer.ranchu
+BOARD_BOOTCONFIG += androidboot.vendor.apex.com.android.hardware.graphics.composer=com.android.hardware.graphics.composer.drm_hwcomposer
 BOARD_BOOTCONFIG += androidboot.vendor.apex.com.android.hardware.gatekeeper=com.android.hardware.gatekeeper.nonsecure
 
 # androidboot.hardware=qcom is inherited from gen4_gvm BOARD_BOOTCONFIG.
 # Keep it out of BOARD_KERNEL_CMDLINE so first-stage init has a single source.
 
-# Cuttlefish graphics: minigbm gralloc + ranchu HWComposer
-BOARD_KERNEL_CMDLINE += androidboot.hardware.gralloc=minigbm
-BOARD_KERNEL_CMDLINE += androidboot.hardware.hwcomposer=ranchu
-BOARD_KERNEL_CMDLINE += androidboot.hardware.hwcomposer.mode=client
-BOARD_KERNEL_CMDLINE += androidboot.hardware.hwcomposer.display_finder_mode=drm
+# Cuttlefish graphics: minigbm gralloc + DRM HWComposer + Mesa3D.
+BOARD_BOOTCONFIG += androidboot.hardware.egl=mesa
+BOARD_BOOTCONFIG += androidboot.hardware.gralloc=minigbm
+BOARD_BOOTCONFIG += androidboot.hardware.hwcomposer=drm_minigbm
+BOARD_BOOTCONFIG += androidboot.hardware.hwcomposer.mode=client
+BOARD_BOOTCONFIG += androidboot.hardware.hwcomposer.display_finder_mode=drm
 
 # Cuttlefish Vehicle HAL proxy server port (VehicleService reads ro.boot.vhal_proxy_server_port)
 BOARD_KERNEL_CMDLINE += androidboot.vhal_proxy_server_port=9300

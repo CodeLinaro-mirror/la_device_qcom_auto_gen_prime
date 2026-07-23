@@ -83,4 +83,18 @@ PRODUCT_COPY_FILES += \
 PRODUCT_PRODUCT_PROPERTIES += persist.adb.tcp.port=5555
 PRODUCT_VENDOR_PROPERTIES += persist.vendor.usb.config=adb
 
+# EGL implementation from VirtIO Mesa (external/virtio/mesa3d).
+# See https://source.android.com/docs/core/graphics/implement-opengl-es.
+PRODUCT_SOONG_NAMESPACES += external/virtio/mesa3d/apex
+PRODUCT_PACKAGES += qcvirtio_libEGL_mesa
+
+# Use VirtIO-local minigbm inside an override of the inherited Cuttlefish
+# gralloc APEX. Do not install its mapper directly to /vendor/lib*/hw,
+# otherwise it conflicts with the inherited root external/minigbm mapper.
+PRODUCT_PACKAGES += com.qcom.prime.gralloc
+
+# Do not include Cuttlefish ranchu Vulkan apex on this target. We ship
+# virtio-based Mesa Vulkan instead.
+TARGET_VULKAN_SUPPORT := false
+
 endif #end of ENABLE_VENDOR_CUTTLEFISH
