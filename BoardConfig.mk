@@ -34,9 +34,6 @@ BOARD_VENDOR_SEPOLICY_DIRS += device/qcom/sepolicy_vndr/generic/vendor/auto_gen_
 BOARD_VENDOR_RAMDISK_KERNEL_MODULES := \
     device/qcom/auto_gen-kernel/virtio_mmio.ko \
     device/qcom/auto_gen-kernel/virtio_console.ko \
-    device/qcom/auto_gen-kernel/system_dlkm/flatten/lib/modules/virtio_pci.ko \
-    device/qcom/auto_gen-kernel/system_dlkm/flatten/lib/modules/virtio_pci_legacy_dev.ko \
-    device/qcom/auto_gen-kernel/system_dlkm/flatten/lib/modules/virtio_pci_modern_dev.ko \
     device/qcom/auto_gen-kernel/system_dlkm/flatten/lib/modules/virtio_blk.ko \
     device/qcom/auto_gen-kernel/failover.ko \
     device/qcom/auto_gen-kernel/net_failover.ko \
@@ -88,12 +85,7 @@ $(call soong_config_set,qcvirtio_graphics,enabled,true)
 
 # Set the state to "orange" to be able to boot on HGY.
 # Must be added to BOARD_KERNEL_CMDLINE to have any effect.
-BOARD_KERNEL_CMDLINE += androidboot.verifiedbootstate=orange
-
-# Remove console from BOARD_KERNEL_CMDLINE because GVM does not boot on HGY.
-# Delete this workaround once proper fix is ready.
-# The console is still hvc0: set via andoidboot.console in the included Gen BoardConfig.
-BOARD_KERNEL_CMDLINE := $(filter-out console=hvc0%,$(BOARD_KERNEL_CMDLINE))
+#BOARD_KERNEL_CMDLINE += androidboot.verifiedbootstate=orange
 
 BOARD_KERNEL_CMDLINE += audit=1
 
@@ -115,4 +107,5 @@ BOARD_BOOTCONFIG += androidboot.hardware.hwcomposer.display_finder_mode=drm
 # Cuttlefish Vehicle HAL proxy server port (VehicleService reads ro.boot.vhal_proxy_server_port)
 BOARD_KERNEL_CMDLINE += androidboot.vhal_proxy_server_port=9300
 
+DEVICE_MANIFEST_FILE := device/qcom/auto_gen_prime/manifest.xml
 endif #end of ENABLE_VENDOR_CUTTLEFISH
