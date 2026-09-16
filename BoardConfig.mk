@@ -39,6 +39,7 @@ BOARD_VENDOR_RAMDISK_KERNEL_MODULES := \
     device/qcom/auto_gen-kernel/net_failover.ko \
     device/qcom/auto_gen-kernel/virtio_net.ko \
     device/qcom/auto_gen-kernel/rename_devices.ko \
+    device/qcom/auto_gen-kernel/system_heap.ko \
     device/qcom/auto_gen-kernel/i2c-virtio.ko
 
 BOARD_VENDOR_KERNEL_MODULES := \
